@@ -24,9 +24,9 @@ function addProductInStock(item, unitPrice, multiBuyOffer, minQtForSpecialPrice,
     listOfProducts.push(tempItem);
 }
 
-function itemAvailable(item){
-    for (i in listOfProducts){
-        let tempItem = listOfProducts[i];
+function isInList(item, list){
+    for (i in list){
+        let tempItem = list[i];
 
         if(tempItem.item == item){
             return true;
@@ -37,8 +37,26 @@ function itemAvailable(item){
 }
 
 function addToCart(item){
-    if(itemAvailable(item)){
-        console.log("Done!");
+    if(isInList(item, listOfProducts)){
+        if(!isInList(item, cartItem)){
+            console.log("test 1");
+            let tempItem = {
+                item: item,
+                quantity: 1
+            }
+
+            cartItem.push(tempItem);
+        }
+        else{
+            console.log("test 2");
+            for (i in cartItem){
+                if(cartItem[i].item = item){
+                    cartItem[i].quantity += 1;
+                }
+            }
+        }
+        
+        console.log(item + " - added into cart.");
     }
 
     else{
@@ -53,15 +71,15 @@ function checkout(){
 function placeOrder() {
     console.log("Your order is successfully placed.");
     console.log("= = = = = = Order Summary = = = = = =");
-    // for the time being displaying all products info
-    for (i in listOfProducts){
-        // Displaying Product Info
-        let tempItem = listOfProducts[i];
-        for (j in Object.keys(tempItem)){
-            console.log(Object.keys(tempItem)[j] + ": " + Object.values(tempItem)[j]);
-        }
-        console.log("------------------------");
-    }
+    // for the time being displaying products info in the cart
+    // for (i in cartItem){
+    //     let tempItem = cartItem[i];
+    //     for (j in Object.keys(tempItem)){
+    //         console.log(Object.keys(tempItem)[j] + ": " + Object.values(tempItem)[j]);
+    //     }
+    //     console.log("------------------------");
+    // }
+    console.log(cartItem);
     console.log("= = = = = = = = = = = = = = = = = = =");
 }
 
@@ -72,5 +90,6 @@ addProductInStock("D", 15, false);
 
 addToCart("A");
 addToCart("E");
+addToCart("A");
 
 placeOrder();
