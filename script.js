@@ -24,8 +24,26 @@ function addProductInStock(item, unitPrice, multiBuyOffer, minQtForSpecialPrice,
     listOfProducts.push(tempItem);
 }
 
-function addToCart(item){
+function itemAvailable(item){
+    for (i in listOfProducts){
+        let tempItem = listOfProducts[i];
 
+        if(tempItem.item == item){
+            return true;
+        }
+    }
+
+    return false;
+}
+
+function addToCart(item){
+    if(itemAvailable(item)){
+        console.log("Done!");
+    }
+
+    else{
+        console.log(item + " is not available in stock!");
+    }
 }
 
 function checkout(){
@@ -37,7 +55,6 @@ function placeOrder() {
     console.log("= = = = = = Order Summary = = = = = =");
     // for the time being displaying all products info
     for (i in listOfProducts){
-
         // Displaying Product Info
         let tempItem = listOfProducts[i];
         for (j in Object.keys(tempItem)){
@@ -52,6 +69,8 @@ addProductInStock("A", 50, true, 3, 130);
 addProductInStock("B", 30, true, 2, 45);
 addProductInStock("C", 20, false);
 addProductInStock("D", 15, false);
-addProductInStock("E", 10, true, 5, 40);
+
+addToCart("A");
+addToCart("E");
 
 placeOrder();
