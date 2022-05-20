@@ -36,51 +36,66 @@ function isInList(item, list){
     return false;
 }
 
-function addToCart(item){
-    if(isInList(item, listOfProducts)){
-        if(!isInList(item, cartItem)){
-            console.log("test 1");
+function addToCart(itemName){
+    if(isInList(itemName, cartItem)){
+        for(i in cartItem){
+            if(cartItem[i].item == itemName) 
+            cartItem[i].quantity++;
+        }
+    }
+    else{
+        if(isInList(itemName, listOfProducts)){
             let tempItem = {
-                item: item,
+                item: itemName,
                 quantity: 1
             }
-
             cartItem.push(tempItem);
         }
-        else{
-            console.log("test 2");
-            for (i in cartItem){
-                if(cartItem[i].item = item){
-                    cartItem[i].quantity += 1;
-                }
+    }
+}
+
+function calculateSubtotal(itemName, quantity){
+    for (i in listOfProducts){
+        let tempItem = listOfProducts[i];
+        if(tempItem.item == itemName){
+            if(tempItem.multiBuyOffer){
+                return (parseInt((quantity/tempItem.minQtForSpecialPrice)) * tempItem.specialPrice) + ((quantity%tempItem.minQtForSpecialPrice) * tempItem.unitPrice);
+            }
+            else{
+                return quantity * tempItem.unitPrice;
             }
         }
-        
-        console.log(item + " - added into cart.");
-    }
-
-    else{
-        console.log(item + " is not available in stock!");
     }
 }
 
-function checkout(){
-
-}
-
-function placeOrder() {
-    console.log("Your order is successfully placed.");
-    console.log("= = = = = = Order Summary = = = = = =");
+function makeCart(){
     // for the time being displaying products info in the cart
-    // for (i in cartItem){
-    //     let tempItem = cartItem[i];
-    //     for (j in Object.keys(tempItem)){
-    //         console.log(Object.keys(tempItem)[j] + ": " + Object.values(tempItem)[j]);
-    //     }
-    //     console.log("------------------------");
-    // }
-    console.log(cartItem);
-    console.log("= = = = = = = = = = = = = = = = = = =");
+    console.log("Item \t Qty \t Sub Total");
+
+    for (i in cartItem){
+        let tempItem = cartItem[i];
+        let subTotal = calculateSubtotal(tempItem.item, tempItem.quantity);
+        cartItem[i-1].subTotal = subTotal;
+
+        // Display cart details
+        console.log(tempItem.item + " \t \t " + tempItem.quantity + " \t \t " + subTotal);
+    }
+
+}
+
+function checkout() {
+    console.log("Your Order Is Confirmed");
+    console.log("Order Details: ");
+
+    makeCart();
+
+    let total = 0;
+    for(i in cartItem){
+        total += cartItem[i].subTotal;
+    }
+
+    console.log("--------------------------");
+    console.log("\t \t Total: " + total);
 }
 
 addProductInStock("A", 50, true, 3, 130);
@@ -89,7 +104,18 @@ addProductInStock("C", 20, false);
 addProductInStock("D", 15, false);
 
 addToCart("A");
-addToCart("E");
 addToCart("A");
+addToCart("B");
+addToCart("C");
+addToCart("A");
+addToCart("A");
+addToCart("B");
+addToCart("D");
+addToCart("B");
+addToCart("C");
+addToCart("A");
+addToCart("A");
+addToCart("A");
+addToCart("D");
 
-placeOrder();
+checkout();
